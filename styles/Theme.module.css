@@ -8,6 +8,16 @@
   max-width: 100%;
 }
 
+.loginContainer {
+  margin-top: 30px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 98vw;
+  max-width: 100%;
+}
+
 .previewImage {
   height: 500px;
   width: 500px;
@@ -32,7 +42,7 @@
 
 .mintContainer {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   gap: 10%;
@@ -55,6 +65,8 @@
 .imageSide {
   width: 45%;
   height: 100%;
+  margin-top: 24px;
+  margin-bottom: 24px;
 }
 
 .image {
