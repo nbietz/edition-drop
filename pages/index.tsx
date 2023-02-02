@@ -359,7 +359,7 @@ const Home: NextPage = () => {
                                 </div>
 
                                 <h2 style={{ fontSize: "1.3rem" }}>- Or -</h2>
-                                <h1 style={{ fontSize: "1.1rem" }}>Use your email if you don't have a crypto wallet...</h1>
+                                <h1 style={{ fontSize: "1.1rem" }}>Use your email if you don&apos;t have a crypto wallet...</h1>
                                 
                                 <div
                                   style={{
