@@ -11,7 +11,9 @@ import {
   useTotalCirculatingSupply,
   Web3Button,
   useWalletConnect,
-  useMetamask } from "@thirdweb-dev/react";
+  useMetamask, 
+  useOwnedNFTs,
+  ThirdwebNftMedia } from "@thirdweb-dev/react";
 import { useMagic } from "@thirdweb-dev/react/evm/connectors/magic";
 import { BigNumber, utils } from "ethers";
 import type { NextPage } from "next";
@@ -34,9 +36,10 @@ const Home: NextPage = () => {
   const disconnectWallet = useDisconnect(); // Hook to disconnect from the connected wallet.
   const [email, setEmail] = useState<string>(""); // State to hold the email address the user entered.
   const [quantity, setQuantity] = useState(1); // Quantity of tokens to mint when Mint button is pressed
-  const { contract: editionDrop } = useContract(myEditionDropContractAddress);
+  const { contract: editionDrop } = useContract(myEditionDropContractAddress, "edition-drop");
   const { data: contractMetadata } = useContractMetadata(editionDrop);
   const { data: nft, isLoading: loadingNFT } = useNFT(editionDrop, tokenId);
+  const { data: ownedNFTs, isLoading: loadingOwnedNfts } = useOwnedNFTs(editionDrop, address);
 
   const claimConditions = useClaimConditions(editionDrop);
   const activeClaimCondition = useActiveClaimConditionForWallet(
@@ -167,6 +170,7 @@ const Home: NextPage = () => {
   ]);
 
   const canClaim = useMemo(() => {
+
     return (
       activeClaimCondition.isSuccess &&
       claimIneligibilityReasons.isSuccess &&
@@ -184,12 +188,17 @@ const Home: NextPage = () => {
     return (
       activeClaimCondition.isLoading || claimedSupply.isLoading || !editionDrop
     );
-  }, [activeClaimCondition.isLoading, editionDrop, claimedSupply.isLoading]);
+  }, [
+    activeClaimCondition.isLoading, 
+    editionDrop, 
+    claimedSupply.isLoading
+  ]);
 
   const buttonLoading = useMemo(
     () => isLoading || claimIneligibilityReasons.isLoading,
     [claimIneligibilityReasons.isLoading, isLoading]
   );
+
   const buttonText = useMemo(() => {
     if (isSoldOut) {
       return "Sold Out";
@@ -314,6 +323,21 @@ const Home: NextPage = () => {
                                 <a className={styles.mainButton} onClick={() => disconnectWallet()}>
                                   Disconnect Wallet
                                 </a>
+                                {ownedNFTs && ownedNFTs?.length > 0 && (
+                                  <div className={styles.cards}>
+                                    <h1>NFT&apos;s you own from this collection:</h1>
+                                    {ownedNFTs
+                                      .map((nft) => (
+                                        <div key={nft.metadata.id.toString()} className={styles.card}>
+                                          <h1>{nft.metadata.name}</h1>
+                                          <ThirdwebNftMedia
+                                            metadata={nft.metadata}
+                                            className={styles.image}
+                                          />
+                                        </div>
+                                    ))}
+                                  </div>
+                                )}
                               </div>
                             ) : (
                               <>
